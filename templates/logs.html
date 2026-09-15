@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}Riwayat Pengujian Nira Tebu | E-Brix{% endblock %}
+
+{% block content %}
+<div class="container">
+  
+  <div class="section-header" style="margin-bottom: 2rem;">
+    <div>
+      <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 0.3rem;">
+        Riwayat Data Pengujian Nira Tebu
+      </h1>
+      <p style="color: var(--text-muted);">
+        Catatan log hasil sampling refraktometer di lapangan. Data siap terintegrasi dengan REST API Backend.
+      </p>
+    </div>
+    <button class="btn btn-primary" data-open-modal="addLogModal">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+      Tambah Data Sampling
+    </button>
+  </div>
+
+  <!-- Search & Filter Card -->
+  <div class="section-card" style="padding: 1.2rem; margin-bottom: 1.5rem;">
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 250px;">
+        <input type="text" class="form-control" id="searchLog" placeholder="Cari berdasarkan Blok Kebun atau Varietas...">
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Container -->
+  <div class="section-card" style="padding: 1rem;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Kode Log</th>
+            <th>Tanggal</th>
+            <th>Blok Lahan</th>
+            <th>Varietas</th>
+            <th>Brix Bawah</th>
+            <th>Brix Tengah</th>
+            <th>Brix Atas</th>
+            <th>Brix Avg</th>
+            <th>Rendemen</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="logsTableBody">
+          <!-- Populated dynamically via Javascript API client -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal: Tambah Data Sampling Baru -->
+<div class="modal-backdrop" id="addLogModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 style="font-size: 1.2rem; font-weight: 700;">Tambah Log Sampel Uji Brix</h3>
+      <button class="modal-close" data-close-modal>&times;</button>
+    </div>
+
+    <form id="addLogForm">
+      <div class="form-group">
+        <label class="form-label">Blok Kebun Lahan</label>
+        <input type="text" class="form-control" id="newBlock" placeholder="Contoh: Blok B-14 (Kebun Barat)" required>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label class="form-label">Varietas Tebu</label>
+          <select class="form-control form-select" id="newVariety" required>
+            <option value="PS 864">PS 864</option>
+            <option value="PS 881">PS 881</option>
+            <option value="Kidang Kencana">Kidang Kencana</option>
+            <option value="VMC 71-238">VMC 71-238</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Usia Tanam (Bulan)</label>
+          <input type="number" class="form-control" id="newAge" value="11" min="6" max="16" required>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem;">
+        <div class="form-group">
+          <label class="form-label">Brix Bawah</label>
+          <input type="number" step="0.1" class="form-control" id="newBot" value="21.0" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Brix Tengah</label>
+          <input type="number" step="0.1" class="form-control" id="newMid" value="19.0" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Brix Atas</label>
+          <input type="number" step="0.1" class="form-control" id="newTop" value="16.5" required>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.8rem; margin-top: 1.5rem;">
+        <button type="button" class="btn btn-secondary" data-close-modal>Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan Log Sampel</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const tbody = document.getElementById('logsTableBody');
+  const addForm = document.getElementById('addLogForm');
+  const searchInput = document.getElementById('searchLog');
+  const modal = document.getElementById('addLogModal');
+
+  if (!tbody || !window.EBrixAPI) return;
+
+  let currentLogs = await window.EBrixAPI.getLogs();
+
+  function renderTable(logs) {
+    tbody.innerHTML = logs.map(row => `
+      <tr>
+        <td style="font-family: monospace; font-weight: 700; color: var(--primary-light);">${row.id}</td>
+        <td>${row.date}</td>
+        <td><strong>${row.block}</strong></td>
+        <td>${row.variety}</td>
+        <td>${row.brixBottom}°Bx</td>
+        <td>${row.brixMiddle}°Bx</td>
+        <td>${row.brixTop}°Bx</td>
+        <td style="font-weight: 800; color: var(--text-main);">${row.brixAvg}°Bx</td>
+        <td style="font-weight: 800; color: var(--accent-gold);">${row.rendemen}%</td>
+        <td>
+          <span class="badge ${row.status.includes('Optimal') ? 'badge-green' : (row.status.includes('Belum') ? 'badge-amber' : 'badge-blue')}">
+            ${row.status}
+          </span>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  renderTable(currentLogs);
+
+  // Search filter
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = currentLogs.filter(l => 
+        l.block.toLowerCase().includes(q) || 
+        l.variety.toLowerCase().includes(q) ||
+        l.id.toLowerCase().includes(q)
+      );
+      renderTable(filtered);
+    });
+  }
+
+  // Handle Add Log Submit
+  if (addForm) {
+    addForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const block = document.getElementById('newBlock').value;
+      const variety = document.getElementById('newVariety').value;
+      const ageMonths = document.getElementById('newAge').value;
+      const brixBottom = document.getElementById('newBot').value;
+      const brixMiddle = document.getElementById('newMid').value;
+      const brixTop = document.getElementById('newTop').value;
+
+      const res = await window.EBrixAPI.addLog({
+        block, variety, ageMonths, brixBottom, brixMiddle, brixTop
+      });
+
+      if (res.success) {
+        currentLogs = await window.EBrixAPI.getLogs();
+        renderTable(currentLogs);
+        modal.classList.remove('show');
+        addForm.reset();
+        showToast('Log pengujian nira tebu berhasil ditambahkan!', 'success');
+      }
+    });
+  }
+});
+</script>
+{% endblock %}

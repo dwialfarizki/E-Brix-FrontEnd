@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Katalog Varietas Tebu Unggulan | E-Brix{% endblock %}
+
+{% block content %}
+<div class="container">
+  
+  <div style="margin-bottom: 2rem; text-align: center;">
+    <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem;">
+      Katalog Varietas Tebu & Potensi °Brix
+    </h1>
+    <p style="color: var(--text-muted); max-width: 680px; margin: 0 auto;">
+      Panduan spesifikasi kultivar tebu unggul Indonesia. Ketahui target kadar gula, tipe kemasakan, serta kesesuaian jenis lahan.
+    </p>
+  </div>
+
+  <!-- Search & Filter Bar -->
+  <div class="section-card" style="padding: 1.2rem; margin-bottom: 2rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="varietyFilters">
+        <button class="btn btn-secondary active-filter" data-filter="all">Semua Varietas</button>
+        <button class="btn btn-secondary" data-filter="genjah">Masa Genjah</button>
+        <button class="btn btn-secondary" data-filter="rendemen">Rendemen Tinggi</button>
+      </div>
+
+      <div style="position: relative; max-width: 300px; width: 100%;">
+        <input type="text" class="form-control" id="searchVariety" placeholder="Cari varietas (mis. PS 864)..." style="padding-left: 2.4rem;">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Variety Cards Container -->
+  <div class="variety-grid" id="varietyGrid">
+    <!-- Populated via Javascript API Service -->
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const container = document.getElementById('varietyGrid');
+  if (!container || !window.EBrixAPI) return;
+
+  const varieties = await window.EBrixAPI.getVarieties();
+  
+  function renderVarieties(list) {
+    container.innerHTML = list.map(v => `
+      <div class="variety-card">
+        <div>
+          <div class="variety-header">
+            <div class="variety-code">${v.name}</div>
+            <span class="variety-tag">${v.badge}</span>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.8rem;">
+            Asal: <strong>${v.origin}</strong>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
+            ${v.description}
+          </p>
+
+          <div class="variety-specs">
+            <div class="spec-item">
+              <span class="title">Target °Brix</span>
+              <span class="value" style="color: var(--primary-light);">${v.targetBrix}°Bx</span>
+            </div>
+            <div class="spec-item">
+              <span class="title">Target Rendemen</span>
+              <span class="value" style="color: var(--accent-gold);">${v.targetRendemen}%</span>
+            </div>
+            <div class="spec-item" style="grid-column: span 2;">
+              <span class="title">Kematangan</span>
+              <span class="value" style="font-size: 0.85rem;">${v.maturity}</span>
+            </div>
+          </div>
+        </div>
+
+        <a href="{{ url_for('calculator') }}" class="btn btn-secondary" style="width: 100%; font-size: 0.85rem; margin-top: 1rem;">
+          Uji Brix Varietas Ini &rarr;
+        </a>
+      </div>
+    `).join('');
+  }
+
+  renderVarieties(varieties);
+
+  // Search input filter
+  const searchInput = document.getElementById('searchVariety');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = varieties.filter(v => 
+        v.name.toLowerCase().includes(q) || 
+        v.description.toLowerCase().includes(q)
+      );
+      renderVarieties(filtered);
+    });
+  }
+});
+</script>
+{% endblock %}
