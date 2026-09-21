@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block title %}E-Brix | Portal Masuk{% endblock %}
+
+{% block sidebar %}{% endblock %}
+{% block header %}{% endblock %}
+
+{% block content %}
+<div
+  class="fixed inset-0 z-50 w-screen h-screen overflow-y-auto bg-surface flex items-center justify-center p-4 md:p-8">
+
+  <!-- Atmospheric Satellite Backdrop (Full Cover) -->
+  <div
+    class="fixed inset-0 w-full h-full bg-cover bg-center mix-blend-multiply opacity-25 scale-105 pointer-events-none transform transition-transform duration-1000"
+    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBzrgwDKv64yMTsHooYIfRyYIq3MMAMYhIHJQMEC19VgzCZAzE4wTX6zlUTOqj5EVxAQKRr8hTTMkLmEZByU5OkUkpvS9SyCjdKg05sZea4Ul1ZI5ZEjUtT-aUtRbGY9Q40X9r96JxeA7Aj0EqXMPNocNWPGu6Y4pcNP5VD2vcGatMKD8WzjCJJi3lNyMDhIxSRC32oKBnGJZpKm4p7aD8J9opy_vENqX-_2ytBREUjZS42PjzT6ROZbg')">
+  </div>
+  <div class="fixed inset-0 bg-gradient-to-tr from-surface via-surface/85 to-primary-container/20 pointer-events-none">
+  </div>
+  <div class="fixed -top-32 -left-32 w-96 h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
+  <div class="fixed -bottom-32 -right-32 w-[32rem] h-[32rem] rounded-full bg-secondary/10 blur-3xl pointer-events-none">
+  </div>
+
+  <!-- Container Kartu Tengah -->
+  <div class="relative z-10 w-full max-w-xl mx-auto flex flex-col gap-space-lg my-auto">
+
+    <!-- System Status Bar -->
+    <div class="flex items-center justify-between px-space-sm">
+      <div class="flex items-center gap-space-xs">
+        <span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+        <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">GIS NODE:
+          SIDOARJO-ZONE-A4</span>
+      </div>
+      <div class="flex items-center gap-space-xs font-label-caps text-label-caps text-outline">
+        <span class="material-symbols-outlined text-[14px]">sensors</span>
+        <span>LATENCY: 24ms • SSL/TLS 1.3</span>
+      </div>
+    </div>
+
+    <!-- White Form Card -->
+    <div
+      class="bg-surface-container-lowest shadow-2xl rounded-2xl p-space-lg md:p-space-xl flex flex-col border border-outline-variant/30">
+
+      <!-- Header Branding -->
+      <div class="flex flex-col items-center text-center">
+        <div class="relative mb-space-md p-space-xs bg-surface-container-low rounded-lg shadow-sm">
+          <img alt="E-Brix Logo" class="w-16 h-16 object-contain rounded"
+            src="https://lh3.googleusercontent.com/aida/AEtjO1V6eP2yLelM5jXw1p6C1uJ4mWMOz8pjRKjyWBod1xfJxJFrEfRtJACdrrkBPO5_uyV4xVqK9BC8iFIEJuCSJ6KxgRHseMv3DHQQA_d-8FezpNDcrQC0A5uJk0ZFCAO5Cbc_Pn_gwdL0iHONv9PEwksJ_0A8QSWo_GjeJpT27KRE3D_otbU6OsUha9aAp9B7Xwpiytzb3EoO-WgUPlV67ImAnZ2FNvu28LLzbUv6zuEz1YIP07Rl2VH5h2Q0">
+        </div>
+        <span class="font-label-caps text-label-caps uppercase text-primary font-semibold tracking-widest mb-space-xs">
+          SECURE GEOSPATIAL GATEWAY
+        </span>
+        <h1 class="font-headline-xl text-headline-xl text-on-surface font-bold tracking-tight">
+          Masuk ke E-Brix
+        </h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-space-xs max-w-md">
+          Sistem Monitoring &amp; Analisis Kualitas Tebu
+        </p>
+      </div>
+
+      <!-- Error Alert Box -->
+      <div id="loginAlert" style="display: none;"
+        class="mt-space-md bg-error-container text-on-error-container p-space-md rounded-lg shadow-sm flex items-start gap-space-md"
+        role="alert">
+        <span class="material-symbols-outlined text-error text-[24px] flex-shrink-0 mt-0.5">block</span>
+        <div class="flex flex-col gap-0.5 min-w-0">
+          <span class="font-headline-sm text-headline-sm text-error font-bold leading-tight">
+            Akses Ditolak
+          </span>
+          <p id="loginAlertText" class="font-body-sm text-body-sm text-on-error-container leading-snug">
+            Pesan error autentikasi
+          </p>
+        </div>
+      </div>
+
+      <!-- Authentication Form -->
+      <form id="loginForm" class="mt-space-lg flex flex-col gap-space-md">
+
+        <!-- Pilihan Role / Peran -->
+        <div class="flex flex-col gap-space-xs">
+          <label class="font-label-regular text-label-regular text-on-surface font-semibold">
+            Role Pengguna (Hak Akses Tampilan)
+          </label>
+          <div
+            class="grid grid-cols-2 gap-space-sm p-1 bg-surface-container-low rounded-lg border border-outline-variant/30">
+            <label class="cursor-pointer">
+              <input type="radio" name="loginRoleRadio" value="Admin" class="peer hidden" checked
+                onchange="document.getElementById('loginRole').value=this.value">
+              <div
+                class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-md font-headline-sm text-body-md text-on-surface-variant transition-all peer-checked:bg-primary-container peer-checked:text-on-primary peer-checked:shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+                <span>Admin</span>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="loginRoleRadio" value="Operator" class="peer hidden"
+                onchange="document.getElementById('loginRole').value=this.value">
+              <div
+                class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-md font-headline-sm text-body-md text-on-surface-variant transition-all peer-checked:bg-primary-container peer-checked:text-on-primary peer-checked:shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">badge</span>
+                <span>Operator</span>
+              </div>
+            </label>
+          </div>
+          <input type="hidden" id="loginRole" value="Admin">
+        </div>
+
+        <!-- Username Input -->
+        <div class="flex flex-col gap-space-xs">
+          <div class="flex justify-between items-center">
+            <label class="font-label-regular text-label-regular text-on-surface font-semibold" for="loginUsername">
+              Username / Email
+            </label>
+            <span class="font-label-caps text-label-caps text-outline">KORPORASI / PTPN</span>
+          </div>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-space-md text-outline pointer-events-none text-[20px]">
+              person
+            </span>
+            <input
+              class="w-full h-11 pl-11 pr-space-md bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-secondary transition-all"
+              id="loginUsername" placeholder="Contoh: admin_ebrix" value="admin" required type="text">
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="flex flex-col gap-space-xs">
+          <div class="flex justify-between items-center">
+            <label class="font-label-regular text-label-regular text-on-surface font-semibold" for="loginPassword">
+              Password
+            </label>
+            <a class="font-label-regular text-label-regular text-secondary hover:text-secondary-container transition-colors font-semibold"
+              href="{{ url_for('forgot_password') }}">
+              Lupa Password?
+            </a>
+          </div>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-space-md text-outline pointer-events-none text-[20px]">
+              lock
+            </span>
+            <input
+              class="w-full h-11 pl-11 pr-11 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-secondary transition-all"
+              id="loginPassword" placeholder="••••••••" value="admin123" required type="password">
+            <button aria-label="Tampilkan atau sembunyikan password"
+              class="absolute right-space-sm p-1 text-outline hover:text-on-surface transition-colors flex items-center justify-center"
+              id="toggle-password-visibility" type="button">
+              <span class="material-symbols-outlined text-[20px]" id="password-eye-icon">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Remember Me Checkbox -->
+        <div class="flex items-center justify-between py-1">
+          <label class="flex items-center gap-space-xs cursor-pointer select-none">
+            <input checked
+              class="w-4 h-4 rounded text-primary-container focus:ring-0 focus:ring-offset-0 bg-surface-container cursor-pointer"
+              type="checkbox">
+            <span class="font-body-sm text-body-sm text-on-surface-variant">
+              Ingat Saya
+            </span>
+          </label>
+          <span class="font-label-caps text-label-caps text-primary font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">shield</span> SECURE
+          </span>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          class="w-full h-12 mt-space-xs bg-primary-container hover:bg-primary text-on-primary font-headline-sm text-headline-sm rounded-lg shadow-md hover:shadow-lg flex items-center justify-center gap-space-sm transition-all duration-200 active:scale-[0.99]"
+          type="submit">
+          <span class="material-symbols-outlined text-[20px]">login</span>
+          <span>Masuk ke Dashboard</span>
+        </button>
+      </form>
+
+      <!-- Security Notice Box -->
+      <div class="mt-space-lg bg-surface-container-high text-on-surface rounded-lg p-space-md">
+        <div class="flex items-center gap-space-xs text-secondary mb-1.5">
+          <span class="material-symbols-outlined text-[18px]">verified_user</span>
+          <span class="font-label-caps text-label-caps uppercase font-bold tracking-wide">
+            Multi-Platform Protection Active
+          </span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          Sistem mendeteksi akun hanya dapat aktif pada satu perangkat (Web vs Android). Jika Anda sedang login pada
+          aplikasi mobile <strong>E-Brix Android</strong>, sesi web akan terkunci otomatis.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Footer Metadata -->
+    <div class="flex flex-col sm:flex-row items-center justify-between text-outline px-space-sm gap-space-xs">
+      <span class="font-label-caps text-label-caps tracking-widest uppercase">
+        E-BRIX DASHBOARD • BUILD 2024.11
+      </span>
+      <div class="flex items-center gap-space-sm">
+        <span
+          class="bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded font-label-caps text-label-caps font-semibold">
+          v2.4-stable
+        </span>
+        <span class="font-body-sm text-body-sm text-outline">© 2024 Agro-Intelligence Platform</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Toggle Password Visibility
+  (function () {
+    const toggleBtn = document.getElementById('toggle-password-visibility');
+    const passwordInput = document.getElementById('loginPassword');
+    const icon = document.getElementById('password-eye-icon');
+
+    if (toggleBtn && passwordInput && icon) {
+      toggleBtn.addEventListener('click', function () {
+        const isPassword = passwordInput.getAttribute('type') === 'password';
+        passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+        icon.textContent = isPassword ? 'visibility_off' : 'visibility';
+      });
+    }
+  })();
+
+  // Login Form Event Listener
+  document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    const role = document.getElementById('loginRole').value;
+    const alertBox = document.getElementById('loginAlert');
+    const alertText = document.getElementById('loginAlertText');
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, role })
+      });
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        alertBox.style.display = 'none';
+        window.location.href = data.redirect;
+      } else {
+        alertText.innerText = data.message;
+        alertBox.style.display = 'flex';
+      }
+    } catch (err) {
+      alertText.innerText = 'Terjadi kesalahan koneksi server.';
+      alertBox.style.display = 'flex';
+    }
+  });
+</script>
+{% endblock %}

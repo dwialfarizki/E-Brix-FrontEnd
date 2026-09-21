@@ -1,106 +1,301 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="E-Brix - Platform Monitoring & Analisis Kualitas Tebu Modern. Estimasi Kadar Gula °Brix, Rendemen Nira, dan Prediksi Panen Tebu.">
-  <meta name="keywords" content="E-Brix, Tebu, Brix, Rendemen, Sugar Content, Smart Farming, Agrikultur, Sugarcane Analytics">
-  <title>{% block title %}E-Brix | Sugarcane Brix & Quality Analytics Platform{% endblock %}</title>
-  
-  <!-- Favicon / Fonts -->
+  <meta name="description" content="E-Brix - Sistem Monitoring Brix & Analisis Kualitas Tebu Modern.">
+  <title>{% block title %}E-Brix | Sistem Monitoring Brix Tebu{% endblock %}</title>
+
+  <!-- Fonts & Material Symbols (Ikon) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- CSS Design System -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Konfigurasi Warna & Font Kustom Tailwind E-Brix -->
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-highest": "#dae2fd",
+            "error-container": "#ffdad6",
+            "secondary-fixed-dim": "#b4c5ff",
+            "on-error-container": "#93000a",
+            "primary-container": "#15803d",
+            "on-secondary-container": "#fefcff",
+            "on-error": "#ffffff",
+            "tertiary": "#854600",
+            "on-tertiary-fixed": "#2f1500",
+            "primary-fixed": "#95f8a7",
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed-dim": "#ffb77d",
+            "tertiary-fixed": "#ffdcc3",
+            "on-primary-fixed-variant": "#005323",
+            "surface-bright": "#faf8ff",
+            "on-secondary-fixed": "#00174b",
+            "on-primary": "#ffffff",
+            "on-surface-variant": "#3f493f",
+            "secondary-container": "#316bf3",
+            "surface-container": "#eaedff",
+            "surface-container-lowest": "#ffffff",
+            "inverse-surface": "#283044",
+            "background": "#faf8ff",
+            "inverse-primary": "#79db8d",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed": "#dbe1ff",
+            "secondary": "#0051d5",
+            "on-primary-fixed": "#00210a",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#131b2e",
+            "surface-variant": "#dae2fd",
+            "on-primary-container": "#d3ffd5",
+            "primary": "#00652c",
+            "on-secondary": "#ffffff",
+            "outline": "#6f7a6e",
+            "on-tertiary-container": "#fff1e9",
+            "on-tertiary-fixed-variant": "#6e3900",
+            "tertiary-container": "#a95b00",
+            "outline-variant": "#becabc",
+            "primary-fixed-dim": "#79db8d",
+            "surface": "#faf8ff",
+            "inverse-on-surface": "#eef0ff",
+            "surface-container-high": "#e2e7ff",
+            "on-background": "#131b2e",
+            "on-secondary-fixed-variant": "#003ea8",
+            "surface-tint": "#006d30",
+            "error": "#ba1a1a"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "margin": "1rem",
+            "space-xl": "2rem",
+            "space-md": "0.75rem",
+            "margin-desktop": "2rem",
+            "space-sm": "0.5rem",
+            "gutter": "1rem",
+            "space-lg": "1.25rem",
+            "gutter-desktop": "1.5rem"
+          },
+          fontFamily: {
+            "metric-xl": ["JetBrains Mono"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "display-lg-mobile": ["Plus Jakarta Sans"],
+            "label-regular": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "metric-lg": ["JetBrains Mono"],
+            "label-caps": ["JetBrains Mono"],
+            "headline-lg": ["Plus Jakarta Sans"]
+          },
+          fontSize: {
+            "metric-xl": ["32px", { lineHeight: "40px", fontWeight: "700" }],
+            "headline-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }],
+            "headline-xl": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+            "display-lg": ["36px", { lineHeight: "44px", fontWeight: "700" }],
+            "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+            "body-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }],
+            "display-lg-mobile": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+            "label-regular": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+            "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "metric-lg": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+            "label-caps": ["11px", { lineHeight: "14px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "headline-lg": ["20px", { lineHeight: "28px", fontWeight: "600" }]
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Design System CSS bawaan -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Leaflet Draw CSS & JS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+  <!-- Turf.js CDN for Spatial Intersect Validation -->
+  <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
 
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   {% block extra_head %}{% endblock %}
-</head>
+</head>>
+
 <body>
 
-  <!-- Navigation Bar -->
-  <nav class="navbar">
-    <div class="container navbar-inner">
-      <a href="{{ url_for('index') }}" class="brand-logo">
-        <div class="logo-icon">
-          <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20m-7-5 14-8M5 9l14 8"/>
+  <!-- Safe Jinja2 Role Variable Initialization -->
+  {% set current_role = role | default('Admin', true) %}
+
+  <div class="app-layout">
+
+    <!-- Left Sidebar Navigation Block (Can be overridden by Login/Forgot Password) -->
+    {% block sidebar %}
+    <aside class="sidebar" {% if current_role=='Operator' %}style="background: #092540;" {% endif %}>
+      <div>
+        <!-- Brand Header -->
+        <div class="sidebar-brand">
+          <div class="brand-icon" {% if current_role=='Operator'
+            %}style="background: #0284c7; box-shadow: 0 4px 12px rgba(2,132,199,0.4);" {% endif %}>EB</div>
+          <div class="brand-info">
+            <div class="brand-title">E-BRIX</div>
+            <div class="brand-subtitle" {% if current_role=='Operator' %}style="color: #38bdf8;" {% endif %}>
+              {% if current_role == 'Operator' %}MODE OPERATOR (VIEW){% else %}SISTEM MONITORING{% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Navigation List -->
+        <ul class="sidebar-menu">
+          <li>
+            <a href="{{ url_for('index') }}"
+              class="sidebar-link {% if active_page == 'dashboard' or active_page == 'peta' %}active{% endif %}" {% if
+              current_role=='Operator' and (active_page=='dashboard' or active_page=='peta' )
+              %}style="background: #0369a1; border-color: #0284c7;" {% endif %}>
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+              Dashboard Peta
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('analisis_data') }}"
+              class="sidebar-link {% if active_page == 'analisis' %}active{% endif %}" {% if current_role=='Operator'
+              and active_page=='analisis' %}style="background: #0369a1; border-color: #0284c7;" {% endif %}>
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              Pusat Analisis Data
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('kelola_wilayah') }}"
+              class="sidebar-link {% if active_page == 'wilayah' %}active{% endif %}" {% if current_role=='Operator' and
+              active_page=='wilayah' %}style="background: #0369a1; border-color: #0284c7;" {% endif %}>
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              {% if current_role == 'Operator' %}Lihat Wilayah Lahan{% else %}Manajemen Wilayah{% endif %}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('kelola_petugas') }}"
+              class="sidebar-link {% if active_page == 'petugas' %}active{% endif %}" {% if current_role=='Operator' and
+              active_page=='petugas' %}style="background: #0369a1; border-color: #0284c7;" {% endif %}>
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              {% if current_role == 'Operator' %}Daftar Petugas{% else %}Kelola Petugas{% endif %}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Logout Button -->
+      <div class="sidebar-footer">
+        <a href="{{ url_for('logout') }}" class="btn-logout">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
-        </div>
-        <div class="brand-text">
-          E-<span>Brix</span>
-        </div>
-      </a>
-
-      <ul class="nav-menu" id="navMenu">
-        <li>
-          <a href="{{ url_for('index') }}" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            Beranda
-          </a>
-        </li>
-        <li>
-          <a href="{{ url_for('calculator') }}" class="nav-link {% if active_page == 'calculator' %}active{% endif %}">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-            Kalkulator Brix
-          </a>
-        </li>
-        <li>
-          <a href="{{ url_for('monitoring') }}" class="nav-link {% if active_page == 'monitoring' %}active{% endif %}">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            Monitoring Lahan
-          </a>
-        </li>
-        <li>
-          <a href="{{ url_for('varieties') }}" class="nav-link {% if active_page == 'varieties' %}active{% endif %}">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h1.5a2.5 2.5 0 002.5-2.5V7a2 2 0 00-2-2h-1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
-            Varietas Tebu
-          </a>
-        </li>
-        <li>
-          <a href="{{ url_for('logs') }}" class="nav-link {% if active_page == 'logs' %}active{% endif %}">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            Riwayat Uji Nira
-          </a>
-        </li>
-      </ul>
-
-      <div class="nav-cta">
-        <a href="{{ url_for('calculator') }}" class="btn btn-primary">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          Mulai Uji Brix
+          Keluar Sistem
         </a>
-        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Menu">
-          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
       </div>
-    </div>
-  </nav>
+    </aside>
+    {% endblock %}
 
-  <!-- Dynamic Page Content -->
-  <main class="main-wrapper">
-    {% block content %}{% endblock %}
-  </main>
+    <!-- Main Content Area -->
+    <div class="main-content" id="mainContentArea">
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div class="footer-text">
-        &copy; 2026 <strong>E-Brix Sugarcane Platform</strong>. Smart Farming & Brix Analytics System.
+      <!-- Top Header Bar Block -->
+      {% block header %}
+      <header class="top-header">
+        <div class="header-left">
+          <div class="header-icon" {% if current_role=='Operator'
+            %}style="background: rgba(2,132,199,0.12); color: #0284c7;" {% endif %}>
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="header-title">{% block page_title %}Dashboard Monitoring Brix{% endblock %}</h1>
+            <div class="header-subtitle">
+              {% if current_role == 'Operator' %}TAMPILAN OPERATOR - DATA TERUPDATE ADMIN{% else %}MUSIM TANAM 2026{%
+              endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="date-badge">
+            <span class="badge-tag">HARI INI</span>
+            <span id="currentDateText">Sabtu, 6 Juni 2026</span>
+          </div>
+
+          {% if current_role == 'Admin' %}
+          <div class="role-badge"
+            style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #047857;">
+            <span class="dot"></span> ROLE: ADMIN
+          </div>
+          {% else %}
+          <div class="role-badge"
+            style="background: rgba(2, 132, 199, 0.15); border-color: rgba(2, 132, 199, 0.4); color: #0369a1;">
+            <span class="dot" style="background: #0284c7;"></span> ROLE: OPERATOR
+          </div>
+          {% endif %}
+        </div>
+      </header>
+      {% endblock %}
+
+      {% if current_role == 'Operator' %}
+      <!-- Operator View Mode Notice Banner -->
+      <div
+        style="background: #e0f2fe; border-bottom: 1px solid #bae6fd; color: #0369a1; padding: 10px 2rem; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          <span>Mode Operator: Menampilkan Data Ter-update Hasil Pengaturan Admin (Akses Baca / Read-Only)</span>
+        </div>
       </div>
-      <ul class="footer-links">
-        <li><a href="{{ url_for('index') }}">Beranda</a></li>
-        <li><a href="{{ url_for('calculator') }}">Kalkulator Brix</a></li>
-        <li><a href="{{ url_for('monitoring') }}">Monitoring</a></li>
-        <li><a href="{{ url_for('varieties') }}">Varietas</a></li>
-        <li><a href="{{ url_for('logs') }}">Data Pengujian</a></li>
-      </ul>
+      {% endif %}
+
+      <!-- Main Page Container -->
+      <main class="page-container" id="pageContainer">
+        {% block content %}{% endblock %}
+      </main>
+
     </div>
-  </footer>
+  </div>
 
   <!-- Toast Container -->
   <div id="toastContainer" class="toast-container"></div>
@@ -111,4 +306,5 @@
   <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
   {% block extra_scripts %}{% endblock %}
 </body>
+
 </html>

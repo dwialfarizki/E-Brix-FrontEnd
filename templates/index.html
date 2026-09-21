@@ -1,212 +1,272 @@
 {% extends 'base.html' %}
 
-{% block title %}E-Brix | Dashboard Monitoring & Analytics Tebu{% endblock %}
+{% block title %}E-Brix | Dashboard Monitoring Brix{% endblock %}
+{% block page_title %}Dashboard Monitoring Brix{% endblock %}
+{% block page_subtitle %}
+  {% if role == 'Operator' %}MODE OPERATOR (TAMPILAN READ-ONLY HASIL DATA ADMIN){% else %}MUSIM TANAM 2026{% endif %}
+{% endblock %}
 
 {% block content %}
-<div class="container">
-  
-  <!-- Hero Banner -->
-  <section class="hero">
-    <div class="hero-badge">
-      <span class="pulse-dot"></span>
-      Sistem Analisis Kadar Gula Tebu & Rendemen Nira v2.4
+
+<!-- Summary KPI Metrics Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+  <div class="white-card" style="padding: 1.25rem; margin-bottom: 0; display: flex; align-items: center; gap: 1rem; border-left: 4px solid #10b981;">
+    <div style="width: 44px; height: 44px; background: rgba(16,185,129,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #10b981;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
     </div>
-
-    <h1 class="hero-title">
-      Optimasi Rendemen Tebu & <br><span>Prediksi Panen Ideal Berbasis °Brix</span>
-    </h1>
-
-    <p class="hero-subtitle">
-      Platform cerdas monitoring kadar gula tebu (*sucrose content*) dari sampel refraktometer batang bawah, tengah, dan atas. Membantu petani & pabrik gula menentukan waktu tebang-angkut dengan tingkat rendemen maksimal.
-    </p>
-
-    <div class="hero-actions">
-      <a href="{{ url_for('calculator') }}" class="btn btn-primary">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-        Buka Kalkulator Brix & Rendemen
-      </a>
-      <a href="{{ url_for('monitoring') }}" class="btn btn-secondary">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-        Lihat Dashboard Lahan
-      </a>
+    <div>
+      <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Rata-Rata Brix</div>
+      <div style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);">18.7°</div>
     </div>
-
-    <!-- Live KPI Metrics Grid -->
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <div class="kpi-icon green">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-          </div>
-          <span class="kpi-trend up">+1.2°Bx</span>
-        </div>
-        <div class="kpi-value" id="kpiBrix">18.7°Bx</div>
-        <div class="kpi-label">Rata-Rata Kadar Brix Tebu</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <div class="kpi-icon amber">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <span class="kpi-trend up">+0.35%</span>
-        </div>
-        <div class="kpi-value" id="kpiRendemen">8.42%</div>
-        <div class="kpi-label">Estimasi Rendemen Nira</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <div class="kpi-icon cyan">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-          </div>
-          <span class="kpi-trend up">Terhubung</span>
-        </div>
-        <div class="kpi-value" id="kpiArea">1,450 Ha</div>
-        <div class="kpi-label">Luas Lahan Terintegrasi</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <div class="kpi-icon lime">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <span class="kpi-trend up">Akurat</span>
-        </div>
-        <div class="kpi-value" id="kpiAccuracy">97.4%</div>
-        <div class="kpi-label">Tingkat Akurasi Model</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Interactive Brix Calculator & Analytics Preview Section -->
-  <div class="calc-grid" style="margin-top: 2rem;">
-    
-    <!-- Quick Calculator Widget -->
-    <div class="section-card">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            Uji Brix Cepat
-          </h2>
-          <p class="section-subtitle">Masukkan hasil sampel pembacaan refraktometer tebu</p>
-        </div>
-      </div>
-
-      <form id="brixCalcForm">
-        <div class="form-group">
-          <label class="form-label">
-            Varietas Tebu
-            <span class="sub">Pilih varietas yang diuji</span>
-          </label>
-          <select class="form-control form-select" id="calcVariety">
-            <option value="PS 864">PS 864 (Genjah-Sedang)</option>
-            <option value="PS 881">PS 881 (Bululawa)</option>
-            <option value="KK">Kidang Kencana (KK)</option>
-            <option value="VMC 71-238">VMC 71-238</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">
-            Brix Batang Bawah (°Bx)
-            <span class="sub">Bagian dekat pangkal akar</span>
-          </label>
-          <div class="range-slider">
-            <input type="range" class="range-input" id="brixBottom" min="10" max="26" step="0.1" value="21.0">
-            <span class="range-val" id="brixBottomVal">21.0</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">
-            Brix Batang Tengah (°Bx)
-            <span class="sub">Bagian tengah batang</span>
-          </label>
-          <div class="range-slider">
-            <input type="range" class="range-input" id="brixMiddle" min="10" max="26" step="0.1" value="19.2">
-            <span class="range-val" id="brixMiddleVal">19.2</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">
-            Brix Batang Atas (°Bx)
-            <span class="sub">Bagian pucuk/ruas atas</span>
-          </label>
-          <div class="range-slider">
-            <input type="range" class="range-input" id="brixTop" min="8" max="24" step="0.1" value="16.5">
-            <span class="range-val" id="brixTopVal">16.5</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Usia Tanam (Bulan)</label>
-          <input type="number" class="form-control" id="plantAge" value="11" min="6" max="15">
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
-          Kalkulasi Rendemen & Status
-        </button>
-      </form>
-    </div>
-
-    <!-- Live Calculation Output Result Display -->
-    <div class="calc-result-card">
-      <div>
-        <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
-          Hasil Pengujian Kadar Gula
-        </div>
-
-        <div class="result-gauge-wrap">
-          <div class="gauge-score" id="resBrixAvg">18.90</div>
-          <div class="gauge-unit">°Brix Rata-Rata</div>
-          <span class="gauge-status status-optimal" id="resStatus">Optimal Panen</span>
-        </div>
-
-        <div class="result-breakdown">
-          <div class="breakdown-item">
-            <span class="lbl">Perkiraan Rendemen Nira:</span>
-            <span class="val" id="resRendemen" style="color: var(--primary-light);">8.52%</span>
-          </div>
-          <div class="breakdown-item">
-            <span class="lbl">Rasio Kemasakan (Top/Bottom):</span>
-            <span class="val" id="resRatio">0.79</span>
-          </div>
-          <div class="breakdown-item">
-            <span class="lbl">Estimasi Gula per Batang (1kg):</span>
-            <span class="val" id="resSugarKg">0.085 kg</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="harvest-advice" id="resAdvice">
-        Kadar gula dan maturitas seragam. Direkomendasikan segera dijadwalkan untuk tebang angkut!
-      </div>
-    </div>
-
   </div>
 
-  <!-- Chart Preview Section -->
-  <div class="section-card" style="margin-top: 2rem;">
-    <div class="section-header">
-      <div>
-        <h2 class="section-title">
-          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
-          Perkembangan Kadar Brix Menurut Usia Tanam
-        </h2>
-        <p class="section-subtitle">Grafik pertumbuhan akumulasi sukrosa tebu varietas unggulan</p>
+  <div class="white-card" style="padding: 1.25rem; margin-bottom: 0; display: flex; align-items: center; gap: 1rem; border-left: 4px solid #f59e0b;">
+    <div style="width: 44px; height: 44px; background: rgba(245,158,11,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #f59e0b;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    </div>
+    <div>
+      <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Estimasi Rendemen</div>
+      <div style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);">8.42%</div>
+    </div>
+  </div>
+
+  <div class="white-card" style="padding: 1.25rem; margin-bottom: 0; display: flex; align-items: center; gap: 1rem; border-left: 4px solid #06b6d4;">
+    <div style="width: 44px; height: 44px; background: rgba(6,182,212,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #06b6d4;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+    </div>
+    <div>
+      <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Total Petak Lahan</div>
+      <div style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);">12 Petak</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Satellite Map Card (Matching Reference Photo) -->
+<div class="white-card">
+  
+  <div class="card-title">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+    Peta Estimasi Kematangan (Brix)
+  </div>
+
+  <!-- Map Frame container -->
+  <div style="position: relative; width: 100%; height: 520px; border-radius: 16px; overflow: hidden; border: 1px solid var(--card-border);">
+    <div id="mapDashboard" style="width: 100%; height: 100%; z-index: 1;"></div>
+
+    <!-- Embedded Legend Overlay Box (Bottom Right matching Photo) -->
+    <div class="map-legend-box">
+      <div class="legend-title">Estimasi Kematangan (Brix)</div>
+      <div class="legend-item">
+        <span class="legend-dot green"></span>
+        <span>Rendah (&lt; 15.0°)</span>
       </div>
-      <a href="{{ url_for('monitoring') }}" class="btn btn-secondary" style="font-size: 0.85rem;">
-        Lihat Detail Monitoring &rarr;
-      </a>
+      <div class="legend-item">
+        <span class="legend-dot yellow"></span>
+        <span>Sedang (15.0° - 19.0°)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot red"></span>
+        <span>Tinggi (&gt; 19.0°)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Filter Bar (Matching Reference Photo) -->
+  <div class="map-filter-bar">
+    <div class="filter-item">
+      <label class="filter-label">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        LAHAN INDUK
+      </label>
+      <select class="form-control form-select" id="selectLahanInduk" onchange="onLahanIndukChanged()">
+        <option value="telkom">Telkom University (Kendal)</option>
+        <option value="sragen">PTPN Sragen Timur</option>
+        <option value="malang">Perkebunan Malang Selatan</option>
+      </select>
     </div>
 
-    <div class="chart-container">
-      <canvas id="brixProgressionChart"></canvas>
+    <div class="filter-item">
+      <label class="filter-label">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        PETAK LAHAN
+      </label>
+      <select class="form-control form-select" id="selectPetakLahan" onchange="onPetakChanged()">
+        <option value="A">Petak A</option>
+        <option value="B">Petak B</option>
+        <option value="C">Petak C</option>
+      </select>
     </div>
+
+    <div class="filter-item">
+      <label class="filter-label">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+        FILTER NILAI BRIX
+      </label>
+      <select class="form-control form-select" id="selectFilterBrix" onchange="applyBrixFilter()">
+        <option value="all">Semua Nilai Brix</option>
+        <option value="rendah">Rendah (&lt; 15.0°)</option>
+        <option value="sedang">Sedang (15.0° - 19.0°)</option>
+        <option value="tinggi">Tinggi (&gt; 19.0°)</option>
+      </select>
+    </div>
+
+    <button class="btn btn-secondary" onclick="resetFilters()" style="height: 42px;">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      Reset
+    </button>
   </div>
 
 </div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let mapDashboard, markerGroup, heatmapPoly;
+const userRole = "{{ role }}";
+
+const lahanData = {
+  telkom: {
+    lat: -6.974, lng: 107.631, zoom: 16,
+    polyCoords: [
+      [-6.972, 107.629],
+      [-6.972, 107.634],
+      [-6.976, 107.635],
+      [-6.977, 107.630],
+      [-6.974, 107.628]
+    ],
+    samples: [
+      { id: 1, label: "A", lat: -6.9735, lng: 107.6315, brix: "13.0°", user: "Nazwa Mursy...", date: "2 Jun 2026", category: "rendah" },
+      { id: 2, label: "B", lat: -6.9745, lng: 107.6325, brix: "17.5°", user: "Ahmad Subagyo", date: "4 Jun 2026", category: "sedang" },
+      { id: 3, label: "C", lat: -6.9755, lng: 107.6305, brix: "21.2°", user: "Budi Santoso", date: "6 Jun 2026", category: "tinggi" }
+    ]
+  },
+  sragen: {
+    lat: -7.428, lng: 111.023, zoom: 15,
+    polyCoords: [
+      [-7.425, 111.020], [-7.425, 111.026], [-7.431, 111.026], [-7.431, 111.020]
+    ],
+    samples: [
+      { id: 4, label: "A", lat: -7.427, lng: 111.022, brix: "14.8°", user: "Citra Dewi", date: "5 Jun 2026", category: "rendah" },
+      { id: 5, label: "B", lat: -7.429, lng: 111.024, brix: "19.5°", user: "Eka Saputra", date: "6 Jun 2026", category: "tinggi" }
+    ]
+  },
+  malang: {
+    lat: -8.125, lng: 112.580, zoom: 15,
+    polyCoords: [
+      [-8.122, 112.576], [-8.122, 112.584], [-8.128, 112.584], [-8.128, 112.576]
+    ],
+    samples: [
+      { id: 6, label: "A", lat: -8.124, lng: 112.579, brix: "22.4°", user: "Ahmad Subagyo", date: "6 Jun 2026", category: "tinggi" }
+    ]
+  }
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+  mapDashboard = L.map('mapDashboard').setView([lahanData.telkom.lat, lahanData.telkom.lng], lahanData.telkom.zoom);
+
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+  }).addTo(mapDashboard);
+
+  markerGroup = L.layerGroup().addTo(mapDashboard);
+  loadLahan('telkom');
+});
+
+function loadLahan(key) {
+  const data = lahanData[key];
+  if (heatmapPoly) mapDashboard.removeLayer(heatmapPoly);
+
+  heatmapPoly = L.polygon(data.polyCoords, {
+    color: '#f97316',
+    weight: 3,
+    fillColor: '#10b981',
+    fillOpacity: 0.55
+  }).addTo(mapDashboard);
+
+  renderSampleMarkers(data.samples);
+}
+
+function renderSampleMarkers(samples) {
+  markerGroup.clearLayers();
+  
+  samples.forEach(s => {
+    let actionBtnHtml = `
+      <button class="btn btn-danger" onclick="hapusPoin(${s.id})" style="width:100%; padding:0.4rem; font-size:0.75rem;">
+        HAPUS POIN
+      </button>
+    `;
+
+    if (userRole === 'Operator') {
+      actionBtnHtml = `
+        <div style="background: #e0f2fe; color: #0369a1; padding: 4px; border-radius: 6px; font-size: 0.72rem; font-weight: 800; text-align: center;">
+          🔒 READ-ONLY OPERATOR
+        </div>
+      `;
+    }
+
+    const popupContent = `
+      <div class="brix-popup-card">
+        <div class="brix-score-big">${s.brix}</div>
+        <div class="brix-score-label">NILAI BRIX</div>
+        
+        <div class="popup-meta">
+          <div>👤 <b>Pengguna:</b> ${s.user}</div>
+          <div style="margin-top:2px;">🗓️ <b>Tanggal:</b> ${s.date}</div>
+        </div>
+
+        ${actionBtnHtml}
+      </div>
+    `;
+
+    const marker = L.marker([s.lat, s.lng]);
+    marker.bindPopup(popupContent, { maxWidth: 220 });
+    markerGroup.addLayer(marker);
+  });
+}
+
+function onLahanIndukChanged() {
+  const selected = document.getElementById('selectLahanInduk').value;
+  const loc = lahanData[selected];
+  
+  mapDashboard.flyTo([loc.lat, loc.lng], loc.zoom, { duration: 1.2 });
+  loadLahan(selected);
+}
+
+function onPetakChanged() {
+  onLahanIndukChanged();
+}
+
+function applyBrixFilter() {
+  const filterVal = document.getElementById('selectFilterBrix').value;
+  const selectedKey = document.getElementById('selectLahanInduk').value;
+  const samples = lahanData[selectedKey].samples;
+
+  if (filterVal === 'all') {
+    renderSampleMarkers(samples);
+  } else {
+    const filtered = samples.filter(s => s.category === filterVal);
+    renderSampleMarkers(filtered);
+  }
+}
+
+function resetFilters() {
+  document.getElementById('selectLahanInduk').value = 'telkom';
+  document.getElementById('selectPetakLahan').value = 'A';
+  document.getElementById('selectFilterBrix').value = 'all';
+  onLahanIndukChanged();
+}
+
+function hapusPoin(id) {
+  if (userRole === 'Operator') {
+    alert("Mode Operator: Pengguna tidak memiliki hak akses untuk menghapus poin.");
+    return;
+  }
+  if (confirm("Apakah Anda yakin ingin menghapus poin pengujian Brix ini dari peta?")) {
+    alert("Poin pengujian #" + id + " berhasil dihapus.");
+    mapDashboard.closePopup();
+    onLahanIndukChanged();
+  }
+}
+</script>
 {% endblock %}

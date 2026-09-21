@@ -1,0 +1,347 @@
+{% extends 'base.html' %}
+
+{% block title %}E-Brix | Pusat Analisis Data{% endblock %}
+{% block page_title %}Pusat Analisis Data{% endblock %}
+{% block page_subtitle %}MUSIM TANAM 2026{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
+
+  <!-- KPI Cards Grid (4 Kotak Stat Atas) -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+    <!-- Rata-Rata Brix -->
+    <div class="white-card" style="padding: 1.25rem; margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between; border-radius: 16px;">
+      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted, #64748b); text-transform: uppercase; letter-spacing: 0.5px;">
+        RATA-RATA BRIX
+      </span>
+      <div style="font-size: 2.2rem; font-weight: 800; color: var(--text-main, #0f172a); margin-top: 0.5rem;" id="kpiAvgBrix">
+        15.0°
+      </div>
+    </div>
+
+    <!-- Petak Ditampilkan -->
+    <div class="white-card" style="padding: 1.25rem; margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between; border-radius: 16px;">
+      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted, #64748b); text-transform: uppercase; letter-spacing: 0.5px;">
+        PETAK DITAMPILKAN
+      </span>
+      <div style="font-size: 2.2rem; font-weight: 800; color: var(--text-main, #0f172a); margin-top: 0.5rem;" id="kpiPetakCount">
+        5
+      </div>
+    </div>
+
+    <!-- Brix Tertinggi -->
+    <div class="white-card" style="padding: 1.25rem; margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between; border-radius: 16px;">
+      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted, #64748b); text-transform: uppercase; letter-spacing: 0.5px;">
+        BRIX TERTINGGI
+      </span>
+      <div style="font-size: 2.2rem; font-weight: 800; color: var(--text-main, #0f172a); margin-top: 0.5rem;" id="kpiMaxBrix">
+        26.0°
+      </div>
+    </div>
+
+    <!-- Brix Terendah -->
+    <div class="white-card" style="padding: 1.25rem; margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between; border-radius: 16px;">
+      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted, #64748b); text-transform: uppercase; letter-spacing: 0.5px;">
+        BRIX TERENDAH
+      </span>
+      <div style="font-size: 2.2rem; font-weight: 800; color: var(--text-main, #0f172a); margin-top: 0.5rem;" id="kpiMinBrix">
+        5.0°
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section (Grid 2 Kolom) -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
+    
+    <!-- Left Chart: Tren Kenaikan Brix -->
+    <div class="white-card" style="margin-bottom: 0; padding: 1.5rem; border-radius: 16px; display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; color: #00652c; font-weight: 800; font-size: 1.05rem;">
+          <span class="material-symbols-outlined" style="font-size: 20px;">trending_up</span>
+          <span>Tren Kenaikan Brix</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.4rem;">
+          <input type="date" id="startDate" class="form-control" value="2026-06-02" style="padding: 0.3rem 0.6rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+          <span style="color: #94a3b8; font-size: 0.8rem;">-</span>
+          <input type="date" id="endDate" class="form-control" value="2026-06-05" style="padding: 0.3rem 0.6rem; font-size: 0.78rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+        </div>
+      </div>
+      <div style="position: relative; width: 100%; height: 260px;">
+        <canvas id="chartTrenBrix"></canvas>
+      </div>
+    </div>
+
+    <!-- Right Chart: Status Rata-rata per Petak -->
+    <div class="white-card" style="margin-bottom: 0; padding: 1.5rem; border-radius: 16px; display: flex; flex-direction: column;">
+      <div style="display: flex; align-items: center; gap: 0.5rem; color: #d97706; font-weight: 800; font-size: 1.05rem; margin-bottom: 1.25rem;">
+        <span class="material-symbols-outlined" style="font-size: 20px;">bar_chart</span>
+        <span>Status Rata-rata per Petak</span>
+      </div>
+      <div style="position: relative; width: 100%; height: 260px;">
+        <canvas id="chartBarPetak"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Table Section: Rekapitulasi Data Sampel Brix -->
+  <div class="white-card" style="padding: 1.5rem; border-radius: 16px; display: flex; flex-direction: column;">
+    <!-- Header Title & Total Badge -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+      <div style="display: flex; align-items: center; gap: 0.6rem; color: #0f172a; font-weight: 800; font-size: 1.15rem;">
+        <span class="material-symbols-outlined" style="color: #10b981; font-size: 22px;">format_list_bulleted</span>
+        <span>Rekapitulasi Data Sampel Brix</span>
+      </div>
+      <div style="background: #f1f5f9; padding: 0.35rem 0.9rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; color: #64748b; border: 1px solid #e2e8f0;">
+        Total Data: <span id="totalDataCount">68</span>
+      </div>
+    </div>
+
+    <!-- Responsive Table with Styled Header Controls -->
+    <div style="overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 12px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left; vertical-align: middle;">
+        <thead>
+          <tr style="background: #fafafa; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+            
+            <th style="padding: 1rem 0.75rem; text-align: center; vertical-align: top; width: 50px;">NO</th>
+            
+            <!-- NAMA LAHAN -->
+            <th style="padding: 0.75rem; vertical-align: top; min-width: 160px;">
+              <div style="display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.4rem;">
+                <span class="material-symbols-outlined" style="font-size: 15px; color: #94a3b8;">layers</span>
+                <span>NAMA LAHAN</span>
+              </div>
+              <select id="filterLahan" class="form-control" style="font-size: 0.78rem; padding: 0.25rem 0.5rem; height: 32px; border-radius: 8px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; width: 100%; font-weight: 500;" onchange="applyTableFilters()">
+                <option value="all">Semua Lahan</option>
+                <option value="Babakan Ciamis">Babakan Ciamis</option>
+                <option value="Kendal Utara">Kendal Utara</option>
+                <option value="Sragen Timur">Sragen Timur</option>
+              </select>
+            </th>
+
+            <!-- PETAK -->
+            <th style="padding: 0.75rem; vertical-align: top; min-width: 130px;">
+              <div style="display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.4rem;">
+                <span class="material-symbols-outlined" style="font-size: 15px; color: #94a3b8;">grid_view</span>
+                <span>PETAK</span>
+              </div>
+              <select id="filterPetak" class="form-control" style="font-size: 0.78rem; padding: 0.25rem 0.5rem; height: 32px; border-radius: 8px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; width: 100%; font-weight: 500;" onchange="applyTableFilters()">
+                <option value="all">Semua Petak</option>
+                <option value="A">Petak A</option>
+                <option value="B">Petak B</option>
+                <option value="C">Petak C</option>
+              </select>
+            </th>
+
+            <!-- PETUGAS -->
+            <th style="padding: 0.75rem; vertical-align: top; min-width: 150px;">
+              <div style="display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.4rem;">
+                <span class="material-symbols-outlined" style="font-size: 15px; color: #94a3b8;">person</span>
+                <span>PETUGAS</span>
+              </div>
+              <select id="filterPetugas" class="form-control" style="font-size: 0.78rem; padding: 0.25rem 0.5rem; height: 32px; border-radius: 8px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; width: 100%; font-weight: 500;" onchange="applyTableFilters()">
+                <option value="all">Semua Petugas</option>
+                <option value="Riza Sigma">Riza Sigma</option>
+                <option value="arya meidi">arya meidi</option>
+                <option value="Ahmad Subagyo">Ahmad Subagyo</option>
+              </select>
+            </th>
+
+            <!-- LATITUDE -->
+            <th style="padding: 0.75rem; vertical-align: top; min-width: 110px;">
+              <div style="display: flex; align-items: center; gap: 0.35rem; height: 100%; padding-top: 0.1rem;">
+                <span class="material-symbols-outlined" style="font-size: 15px; color: #94a3b8;">location_on</span>
+                <span>LATITUDE</span>
+              </div>
+            </th>
+
+            <!-- LONGITUDE -->
+            <th style="padding: 0.75rem; vertical-align: top; min-width: 110px;">
+              <div style="display: flex; align-items: center; gap: 0.35rem; height: 100%; padding-top: 0.1rem;">
+                <span class="material-symbols-outlined" style="font-size: 15px; color: #94a3b8;">location_on</span>
+                <span>LONGITUDE</span>
+              </div>
+            </th>
+
+            <!-- NILAI BRIX -->
+            <th style="padding: 0.75rem; vertical-align: top; min-width: 130px;">
+              <div style="display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.4rem;">
+                <span class="material-symbols-outlined" style="font-size: 15px; color: #94a3b8;">filter_alt</span>
+                <span>NILAI BRIX</span>
+              </div>
+              <select id="sortBrix" class="form-control" style="font-size: 0.78rem; padding: 0.25rem 0.5rem; height: 32px; border-radius: 8px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; width: 100%; font-weight: 500;" onchange="applyTableFilters()">
+                <option value="none">Urutkan</option>
+                <option value="desc">Tinggi ke Rendah</option>
+                <option value="asc">Rendah ke Tinggi</option>
+              </select>
+            </th>
+
+            <!-- WAKTU PENGUJIAN -->
+            <th style="padding: 0.75rem; vertical-align: top; min-width: 150px;">
+              <div style="display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.4rem;">
+                <span class="material-symbols-outlined" style="font-size: 15px; color: #94a3b8;">schedule</span>
+                <span>WAKTU PENGUJIAN</span>
+              </div>
+              <select id="sortWaktu" class="form-control" style="font-size: 0.78rem; padding: 0.25rem 0.5rem; height: 32px; border-radius: 8px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; width: 100%; font-weight: 500;" onchange="applyTableFilters()">
+                <option value="desc">Terbaru (DESC)</option>
+                <option value="asc">Terlama (ASC)</option>
+              </select>
+            </th>
+
+          </tr>
+        </thead>
+        <tbody id="sampelTableBody">
+          <!-- Data di-render dinamis oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let lineChart, barChart;
+
+// Master Data Sampel (Format Persis Foto Acuan)
+const masterDataSampel = [
+  { no: 1, lahan: "Babakan Ciamis", petak: "A", petugas: "Riza Sigma", lat: "-6.969138", lng: "107.636310", brix: 16.0, waktu: "5 Jun 2026 14:10" },
+  { no: 2, lahan: "Babakan Ciamis", petak: "A", petugas: "Riza Sigma", lat: "-6.969137", lng: "107.636310", brix: 20.0, waktu: "5 Jun 2026 14:05" },
+  { no: 3, lahan: "Babakan Ciamis", petak: "A", petugas: "Riza Sigma", lat: "-6.969138", lng: "107.636310", brix: 11.0, waktu: "5 Jun 2026 13:50" },
+  { no: 4, lahan: "Babakan Ciamis", petak: "A", petugas: "arya meidi", lat: "-6.969138", lng: "107.636310", brix: 12.0, waktu: "5 Jun 2026 12:30" },
+  { no: 5, lahan: "Kendal Utara", petak: "B", petugas: "Ahmad Subagyo", lat: "-7.452100", lng: "112.712300", brix: 22.5, waktu: "2 Jun 2026 11:15" },
+  { no: 6, lahan: "Sragen Timur", petak: "C", petugas: "arya meidi", lat: "-7.453000", lng: "112.714500", brix: 18.2, waktu: "2 Jun 2026 10:00" },
+];
+
+let filteredData = [...masterDataSampel];
+
+document.addEventListener("DOMContentLoaded", function() {
+  initLineChart();
+  initBarChart();
+  applyTableFilters();
+});
+
+function initLineChart() {
+  const ctx = document.getElementById('chartTrenBrix').getContext('2d');
+  lineChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['2 Jun 12.29', '2 Jun 12.45', '2 Jun 12.50', '2 Jun 12.57', '2 Jun 13.03', '2 Jun 13.07', '5 Jun 15.15'],
+      datasets: [{
+        label: 'Nilai Brix',
+        data: [14, 26, 8, 18, 22, 7, 20],
+        borderColor: '#10b981',
+        backgroundColor: '#10b981',
+        borderWidth: 2,
+        pointRadius: 4,
+        tension: 0.1,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: 28, ticks: { stepSize: 7 } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function initBarChart() {
+  const ctx = document.getElementById('chartBarPetak').getContext('2d');
+  barChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['A', 'B', 'C', 'D', 'E'],
+      datasets: [{
+        data: [15, 15.2, 14, 19, 11.5],
+        backgroundColor: ['#10b981', '#f59e0b', '#10b981', '#f59e0b', '#10b981'],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: 20, ticks: { stepSize: 5 } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function applyTableFilters() {
+  const lahan = document.getElementById('filterLahan').value;
+  const petak = document.getElementById('filterPetak').value;
+  const petugas = document.getElementById('filterPetugas').value;
+  const sortBrix = document.getElementById('sortBrix').value;
+  const sortWaktu = document.getElementById('sortWaktu').value;
+
+  // 1. Filtering Data
+  filteredData = masterDataSampel.filter(item => {
+    const matchLahan = (lahan === 'all' || item.lahan === lahan);
+    const matchPetak = (petak === 'all' || item.petak === petak);
+    const matchPetugas = (petugas === 'all' || item.petugas === petugas);
+    return matchLahan && matchPetak && matchPetugas;
+  });
+
+  // 2. Sorting Menurut Nilai Brix
+  if (sortBrix === 'desc') {
+    filteredData.sort((a, b) => b.brix - a.brix);
+  } else if (sortBrix === 'asc') {
+    filteredData.sort((a, b) => a.brix - b.brix);
+  }
+
+  // 3. Sorting Menurut Waktu
+  if (sortBrix === 'none') {
+    if (sortWaktu === 'desc') {
+      filteredData.sort((a, b) => new Date(b.waktu) - new Date(a.waktu));
+    } else if (sortWaktu === 'asc') {
+      filteredData.sort((a, b) => new Date(a.waktu) - new Date(b.waktu));
+    }
+  }
+
+  renderTable(filteredData);
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('sampelTableBody');
+  tbody.innerHTML = '';
+  document.getElementById('totalDataCount').innerText = data.length;
+
+  data.forEach((item, index) => {
+    const tr = document.createElement('tr');
+    tr.style.borderBottom = '1px solid #f1f5f9';
+
+    // Badge Warna Khas Sesuai Tingkat Kadar Brix
+    let badgeBg = '#10b981'; // Hijau
+    if (item.brix >= 20) {
+      badgeBg = '#ef4444'; // Merah
+    } else if (item.brix >= 15) {
+      badgeBg = '#f59e0b'; // Oranye
+    }
+
+    tr.innerHTML = `
+      <td style="padding: 0.9rem 0.75rem; text-align: center; color: #64748b; font-weight: 500;">${index + 1}</td>
+      <td style="padding: 0.9rem 0.75rem; font-weight: 600; color: #334155;">${item.lahan}</td>
+      <td style="padding: 0.9rem 0.75rem; font-weight: 800; color: #1d4ed8;">${item.petak}</td>
+      <td style="padding: 0.9rem 0.75rem; font-weight: 700; color: #0f172a;">${item.petugas}</td>
+      <td style="padding: 0.9rem 0.75rem; color: #64748b; font-family: monospace;">${item.lat}</td>
+      <td style="padding: 0.9rem 0.75rem; color: #64748b; font-family: monospace;">${item.lng}</td>
+      <td style="padding: 0.9rem 0.75rem;">
+        <span style="background: ${badgeBg}; color: #ffffff; padding: 4px 14px; border-radius: 8px; font-weight: 800; font-size: 0.85rem; display: inline-block;">
+          ${item.brix.toFixed(1)}°
+        </span>
+      </td>
+      <td style="padding: 0.9rem 0.75rem; color: #64748b; font-size: 0.82rem;">${item.waktu}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+</script>
+{% endblock %}
